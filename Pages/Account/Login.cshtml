@@ -1,0 +1,57 @@
+﻿@page
+@model Akwarium.Pages.Account.LoginModel
+@{
+    ViewData["Title"] = "Logowanie";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+}
+
+<section class="auth">
+    <div class="auth-card">
+        <h1>Witaj ponownie 👋</h1>
+        <p class="subtitle">Zaloguj się, aby przejść do panelu akwarium</p>
+
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="alert error">@Model.ErrorMessage</div>
+        }
+
+        <form method="post" class="auth-form" novalidate>
+            <input type="hidden" asp-for="ReturnUrl" />
+
+            <div asp-validation-summary="ModelOnly" class="alert error"></div>
+
+            <div class="field">
+                <label asp-for="Email"></label>
+                <input asp-for="Email"
+                       class="form-control"
+                       autocomplete="email"
+                       placeholder="np. jan.kowalski@domena.pl" />
+                <span asp-validation-for="Email" class="field-error"></span>
+            </div>
+
+            <div class="field">
+                <label asp-for="Password"></label>
+                <input asp-for="Password"
+                       type="password"
+                       class="form-control"
+                       autocomplete="current-password"
+                       placeholder="••••••••" />
+                <span asp-validation-for="Password" class="field-error"></span>
+            </div>
+
+            <button type="submit" class="btn-primary">Zaloguj się</button>
+        </form>
+
+        <p class="hint">
+            Nie masz konta?
+            <a asp-page="/Account/Register">Zarejestruj się</a>
+        </p>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

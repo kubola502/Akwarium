@@ -1,0 +1,58 @@
+﻿@page
+@model Akwarium.Pages.Account.RegisterModel
+@{
+    ViewData["Title"] = "Rejestracja";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/register.css" asp-append-version="true" />
+}
+
+
+<div class="register-container">
+    <h2>Utwórz konto</h2>
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="error-message">@Model.ErrorMessage</div>
+    }
+
+    <form method="post">
+        <input type="hidden" asp-for="ReturnUrl" />
+
+        <div asp-validation-summary="ModelOnly" class="validation-summary text-danger"></div>
+
+        <div class="form-group">
+            <label asp-for="Nick"></label>
+            <input asp-for="Nick"
+                   class="form-control"
+                   placeholder="Wprowadź swój nick" />
+            <span asp-validation-for="Nick" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Email"></label>
+            <input asp-for="Email"
+                   type="email"
+                   class="form-control"
+                   placeholder="Podaj adres e-mail" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Password"></label>
+            <input asp-for="Password"
+                   type="password"
+                   class="form-control"
+                   placeholder="Ustaw hasło" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn-register">Zarejestruj się</button>
+    </form>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,50 @@
+﻿@using Microsoft.AspNetCore.Http
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <base href="/" target="_self" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - Inteligentne Akwarium</title>
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @RenderSection("Styles", required: false)
+</head>
+<body class="app-shell app-dark">
+    <header class="app-header">
+        <nav class="nav">
+            <a class="brand" asp-page="/Index">🐠 Inteligentne Akwarium</a>
+
+            <div class="navbar-right">
+                <a asp-page="/Dashboard/Dashboard">Panel</a>
+                @if (Context.Session.GetString("UserName") != null)
+                {
+                    <span>Witaj, @Context.Session.GetString("UserName")!</span>
+                    <a asp-page="/Account/ChangePassword">Zmień hasło</a>
+                    <a asp-page="/Account/Logout">Wyloguj</a>
+                }
+                else
+                {
+                    <a asp-page="/Account/Login">Zaloguj</a>
+                    <a asp-page="/Account/Register">Zarejestruj</a>
+                }
+            </div>
+        </nav>
+    </header>
+
+    <main class="app-main">
+        <div class="container">
+            @RenderBody()
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <div class="container">
+            <p>&copy; 2025 — Inteligentne Akwarium</p>
+        </div>
+    </footer>
+</body>
+ @RenderSection("Scripts", required: false)
+ 
+</html>

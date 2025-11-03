@@ -1,0 +1,490 @@
+﻿@page
+@model Akwarium.Pages.Dashboard.DashboardModel
+@{
+    ViewData["Title"] = "Panel";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
+}
+
+<div class="dash">
+    <aside class="dash-sidebar">
+        <div class="dash-user">
+            <div class="avatar">🐠</div>
+            <div class="name">@Model.UserName</div>
+        </div>
+
+        <nav class="dash-nav">
+            <a asp-page="/Dashboard/Dashboard"
+               asp-route-tab="overview"
+               asp-route-AquariumId="@Model.AquariumId"
+               class="nav-item @(Model.ActiveTab=="overview" ? "active" : "")">
+                Przegląd
+            </a>
+
+            <a asp-page="/Dashboard/Dashboard"
+               asp-route-tab="charts"
+               asp-route-AquariumId="@Model.AquariumId"
+               class="nav-item @(Model.ActiveTab=="charts" ? "active" : "")">
+                Wykresy
+            </a>
+
+            <a asp-page="/Dashboard/Dashboard"
+               asp-route-tab="compare"
+               asp-route-AquariumId="@Model.AquariumId"
+               class="nav-item @(Model.ActiveTab=="compare" ? "active" : "")">
+                Porównanie
+            </a>
+
+            <a asp-page="/Dashboard/Dashboard"
+               asp-route-tab="thresholds"
+               asp-route-AquariumId="@Model.AquariumId"
+               class="nav-item @(Model.ActiveTab=="thresholds" ? "active" : "")">
+                Progi
+            </a>
+
+            <a asp-page="/Dashboard/Dashboard"
+               asp-route-tab="export"
+               asp-route-AquariumId="@Model.AquariumId"
+               class="nav-item @(Model.ActiveTab=="export" ? "active" : "")">
+                Eksport CSV
+            </a>
+
+            <a asp-page="/Dashboard/Dashboard"
+               asp-route-tab="config"
+               asp-route-AquariumId="@Model.AquariumId"
+               class="nav-item @(Model.ActiveTab=="config" ? "active" : "")">
+                Konfiguracja
+            </a>
+        </nav>
+    </aside>
+
+    <main class="dash-main">
+        @switch (Model.ActiveTab)
+        {
+            // ================== PRZEGLĄD ==================
+            default:
+            case "overview":
+                <section class="panel">
+                    <h2>Przegląd</h2>
+
+                    <form method="get" class="filters">
+                        <input type="hidden" name="tab" value="overview" />
+                        <div class="form-group">
+                            <label>Akwarium</label>
+                            <select name="AquariumId" class="form-control">
+                                <option value="">— wszystkie —</option>
+                                @foreach (var a in Model.AquariumOptions)
+                                {
+                                    <option value="@a.Value" selected="@(Model.AquariumId?.ToString()==a.Value)">
+                                        @a.Text
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-outline">Zastosuj filtr</button>
+                    </form>
+
+                    @if (Model.LatestReadings.Any())
+                    {
+                        <div class="cards-grid">
+                            @foreach (var r in Model.LatestReadings)
+                            {
+                                var thr = Model.GetThresholdForSensor(r.SensorId);
+                                var isOut = thr != null && thr.IsOutOfRange(r.Value);
+
+                                <div class="card reading-card @(isOut ? "card-alert" : "card-ok")">
+                                    <div class="name">@r.SensorName</div>
+                                    <div class="type">@r.SensorType</div>
+                                    <div class="value">@r.Value</div>
+                                    <div class="time">@r.TimeAdded.ToString("g")</div>
+
+                                    @if (thr != null)
+                                    {
+                                        <div class="threshold-info">
+                                            <span>Min: @(thr.Min?.ToString("0.##") ?? "-")</span>
+                                            <span>Max: @(thr.Max?.ToString("0.##") ?? "-")</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="threshold-info">
+                                            <span>Min: -</span>
+                                            <span>Max: -</span>
+                                        </div>
+                                    }
+
+                                    @if (isOut)
+                                    {
+                                        <div class="badge-alert">Poza zakresem!</div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p>Brak danych pomiarowych dla wybranego akwarium.</p>
+                    }
+                </section>
+                break;
+
+            // ================== WYKRESY ==================
+            case "charts":
+                <section class="panel">
+                    <h2>Wykresy</h2>
+
+                    <form method="get" class="filters">
+                        <input type="hidden" name="tab" value="charts" />
+                        <input type="hidden" name="AquariumId" value="@(Model.AquariumId?.ToString() ?? "")" />
+
+                        <label>Sensor</label>
+                        <select name="SensorId" class="form-control" required>
+                            <option value="">— wybierz —</option>
+                            @foreach (var s in Model.SensorOptions)
+                            {
+                                <option value="@s.Value" selected="@(Model.SensorId?.ToString()==s.Value)">
+                                    @s.Text
+                                </option>
+                            }
+                        </select>
+
+                        <div class="filter-grid">
+                            <div>
+                                <label>Od</label>
+                                <input type="datetime-local" name="From"
+                                       value="@((Model.From ?? DateTime.Now.AddDays(-1)).ToString("yyyy-MM-ddTHH:mm"))" />
+                            </div>
+                            <div>
+                                <label>Do</label>
+                                <input type="datetime-local" name="To"
+                                       value="@((Model.To ?? DateTime.Now).ToString("yyyy-MM-ddTHH:mm"))" />
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn">Pokaż wykres</button>
+                    </form>
+
+                    @if (Model.SensorId is int sid)
+                    {
+                        <div style="margin-top:16px;overflow:auto">
+                            <img alt="Wykres"
+                                 src="@Url.Page("/Dashboard/Dashboard", new {
+                                        handler = "Chart",
+                                        sensorId = sid,
+                                        from = (Model.From ?? DateTime.Now.AddDays(-1)).ToString("O"),
+                                        to   = (Model.To   ?? DateTime.Now).ToString("O"),
+                                        width = 1000,
+                                        height = 360,
+                                        _ = DateTime.UtcNow.Ticks
+                                 })"
+                                 style="max-width:100%;border:1px solid #e5e7eb;border-radius:12px" />
+                        </div>
+                    }
+                    else
+                    {
+                        <p>Wybierz czujnik i zakres dat, następnie kliknij „Pokaż wykres”.</p>
+                    }
+                </section>
+                break;
+
+            // ================== PORÓWNANIE ==================
+            case "compare":
+                <section class="panel">
+                    <h2>Porównanie</h2>
+
+                    <form method="get" class="filters">
+                        <input type="hidden" name="tab" value="compare" />
+                        <input type="hidden" name="AquariumId" value="@(Model.AquariumId?.ToString() ?? "")" />
+
+                        <div class="filter-grid">
+                            <div>
+                                <label>Czujnik 1</label>
+                                <select name="CompareSensor1Id" class="form-control" required>
+                                    <option value="">— wybierz —</option>
+                                    @foreach (var s in Model.SensorOptions)
+                                    {
+                                        <option value="@s.Value" selected="@(Model.CompareSensor1Id?.ToString()==s.Value)">
+                                            @s.Text
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                            <div>
+                                <label>Czujnik 2</label>
+                                <select name="CompareSensor2Id" class="form-control" required>
+                                    <option value="">— wybierz —</option>
+                                    @foreach (var s in Model.SensorOptions)
+                                    {
+                                        <option value="@s.Value" selected="@(Model.CompareSensor2Id?.ToString()==s.Value)">
+                                            @s.Text
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="filter-grid">
+                            <div>
+                                <label>Od</label>
+                                <input type="datetime-local" name="From"
+                                       value="@((Model.From ?? DateTime.Now.AddDays(-1)).ToString("yyyy-MM-ddTHH:mm"))" />
+                            </div>
+                            <div>
+                                <label>Do</label>
+                                <input type="datetime-local" name="To"
+                                       value="@((Model.To ?? DateTime.Now).ToString("yyyy-MM-ddTHH:mm"))" />
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn">Porównaj</button>
+                    </form>
+
+                    @if (Model.CanShowCompareChart)
+                    {
+                        <div style="margin-top:16px;overflow:auto">
+                            <img alt="Porównanie"
+                                 src="@Url.Page("/Dashboard/Dashboard", new {
+                                        handler = "CompareChart",
+                                        sensor1Id = Model.CompareSensor1Id,
+                                        sensor2Id = Model.CompareSensor2Id,
+                                        from = (Model.From ?? DateTime.Now.AddDays(-1)).ToString("O"),
+                                        to   = (Model.To   ?? DateTime.Now).ToString("O"),
+                                        width = 1000,
+                                        height = 360,
+                                        _ = DateTime.UtcNow.Ticks
+                                 })"
+                                 style="max-width:100%;border:1px solid #e5e7eb;border-radius:12px" />
+                        </div>
+                    }
+                    else
+                    {
+                        <p>Wybierz dwa różne czujniki i zakres dat.</p>
+                    }
+
+                    @if (Model.LatestReadings.Any())
+                    {
+                        <table class="compare-table">
+                            <thead>
+                                <tr>
+                                    <th>Sensor</th>
+                                    <th>Typ</th>
+                                    <th>Ostatnia wartość</th>
+                                    <th>Czas</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var r in Model.LatestReadings)
+                                {
+                                    <tr>
+                                        <td>@r.SensorName</td>
+                                        <td>@r.SensorType</td>
+                                        <td>@r.Value</td>
+                                        <td>@r.TimeAdded.ToString("g")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </section>
+                break;
+
+            // ================== PROGI ==================
+            case "thresholds":
+                <section class="panel">
+                    <h2>Progi alarmowe</h2>
+                    <p style="font-size:12px;color:#9ca3af;">
+                        Ustaw zakresy (min / max) dla czujników. Kafelki w przeglądzie
+                        zmieniają kolor, gdy wartość wyjdzie poza ustawiony zakres.
+                    </p>
+
+                    @if (!Model.Thresholds.Any())
+                    {
+                        <p>Brak czujników dla bieżącego akwarium.</p>
+                    }
+                    else
+                    {
+                        <form method="post" asp-page-handler="Thresholds">
+                            <input type="hidden" name="AquariumId" value="@(Model.AquariumId?.ToString() ?? "")" />
+
+                            <table class="threshold-table">
+                                <thead>
+                                    <tr>
+                                        <th>Sensor</th>
+                                        <th>Typ</th>
+                                        <th>Ostatnia wartość</th>
+                                        <th>Min</th>
+                                        <th>Max</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < Model.Thresholds.Count; i++)
+                                    {
+                                        var t = Model.Thresholds[i];
+                                        var rowClass = t.IsOutOfRange ? "row-out" : "row-ok";
+
+                                        <tr class="@rowClass">
+                                            <td>@t.SensorName</td>
+                                            <td>@t.SensorType</td>
+                                            <td>@(t.LatestValue?.ToString("0.##") ?? "-")</td>
+                                            <td>
+                                            <input type="hidden"
+                                                   name="ThresholdInputs[@i].SensorId"
+                                                   value="@t.SensorId" />
+                                            <input type="text"
+                                                   name="ThresholdInputs[@i].Min"
+                                                   value="@(t.Min?.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture) ?? "")"
+                                                   class="form-control" />
+                                            </td>
+                                        <td>
+                                            <input type="text"
+                                                   name="ThresholdInputs[@i].Max"
+                                                   value="@(t.Max?.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture) ?? "")"
+                                                   class="form-control" />
+                                        </td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                            <button type="submit" class="btn">Zapisz progi</button>
+                        </form>
+                    }
+                </section>
+                break;
+
+            // ================== EKSPORT ==================
+            case "export":
+                <section class="panel">
+                    <h2>Eksport CSV</h2>
+
+                    @if (!string.IsNullOrEmpty(Model.ExportMessage))
+                    {
+                        <div class="alert-message">@Model.ExportMessage</div>
+                    }
+
+                    <form method="get"
+                          action="/Dashboard/Dashboard"
+                          class="filters">
+                        <input type="hidden" name="handler" value="Csv" />
+                        <input type="hidden" name="tab" value="export" />
+                        <input type="hidden" name="AquariumId" value="@(Model.AquariumId?.ToString() ?? "")" />
+
+                        <label>Sensor</label>
+                        <select name="sensorId" class="form-control" required>
+                            <option value="0">— wszystkie czujniki (ZIP) —</option>
+                            @foreach (var s in Model.SensorOptions)
+                            {
+                                <option value="@s.Value">@s.Text</option>
+                            }
+                        </select>
+
+                        <div class="filter-grid">
+                            <div>
+                                <label>Zakres raportu</label>
+                                <select name="period" class="form-control">
+                                    <option value="week">Ostatni tydzień</option>
+                                    <option value="month">Ostatni miesiąc</option>
+                                    <option value="day">Wybrany dzień (pole „Od”)</option>
+                                    <option value="custom">Własny zakres (Od / Do)</option>
+                                </select>
+                            </div>
+                            <div style="font-size:11px;color:#9ca3af;align-self:flex-end;">
+                                Dla opcji tydzień / miesiąc daty „Od / Do” zostaną zignorowane.
+                            </div>
+                        </div>
+
+                        <div class="filter-grid">
+                            <div>
+                                <label>Od</label>
+                                <input type="datetime-local" name="from"
+                                       value="@DateTime.Now.AddDays(-7).ToString("yyyy-MM-ddTHH:mm")" />
+                            </div>
+                            <div>
+                                <label>Do</label>
+                                <input type="datetime-local" name="to"
+                                       value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                            </div>
+                        </div>
+
+                        <div class="filter-grid">
+                            <div>
+                                <label>Separator CSV</label>
+                                <select name="delim" class="form-control">
+                                    <option value=";">średnik (Excel PL)</option>
+                                    <option value=",">przecinek</option>
+                                </select>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+                                <input type="checkbox" id="excelFriendly" name="excelFriendly" checked />
+                                <label for="excelFriendly" style="margin:0">Dodaj wiersz <code>sep=;</code></label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-outline">Pobierz</button>
+                    </form>
+                </section>
+                break;
+
+            // ================== KONFIGURACJA ==================
+            case "config":
+                <section class="panel">
+                    <h2>Konfiguracja</h2>
+
+                    <div class="config-grid">
+                        <div>
+                            <h3>Dodaj akwarium</h3>
+                            <form method="post" asp-page-handler="AddAquarium">
+                                <div class="form-group">
+                                    <label>Nazwa akwarium</label>
+                                    <input type="text" name="AquariumName" class="form-control" required />
+                                </div>
+                                <button type="submit" class="btn">Dodaj akwarium</button>
+                            </form>
+                        </div>
+
+                        <div>
+                            <h3>Dodaj czujnik</h3>
+                            <form method="post" asp-page-handler="AddSensor">
+                                <div class="form-group">
+                                    <label>Akwarium</label>
+                                    <select name="AquariumId" class="form-control" required>
+                                        <option value="">— wybierz akwarium —</option>
+                                        @foreach (var a in Model.AquariumOptions)
+                                        {
+                                            <option value="@a.Value">@a.Text</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Nazwa czujnika</label>
+                                    <input type="text" name="SensorName" class="form-control" required />
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Typ czujnika</label>
+                                    <input type="text" name="SensorType" class="form-control" placeholder="np. Temperature, pH" required />
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Opis</label>
+                                    <input type="text" name="Description" class="form-control" />
+                                </div>
+
+                                <button type="submit" class="btn btn-outline">Dodaj czujnik</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <p style="font-size:12px;color:#9ca3af;margin-top:24px;">
+                        W przyszłości w tej zakładce możesz też dodać integrację z aplikacją mobilną,
+                        która będzie wysyłać dane bezpośrednio z ESP32.
+                    </p>
+                </section>
+                break;
+        }
+    </main>
+</div>

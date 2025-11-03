@@ -1,0 +1,449 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    color: #fff;
+    background-color: #0b1c26;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #102a38;
+    padding: 1rem 2rem;
+}
+
+    .navbar a {
+        color: #aee1f9;
+        text-decoration: none;
+        margin-left: 1rem;
+        font-weight: bold;
+    }
+
+        .navbar a:hover {
+            color: #ffffff;
+        }
+
+.hero {
+    height: 100vh;
+    background: url('/images/aquarium.jpg') center center / cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.overlay {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 3rem;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.btn {
+    background-color: #3cb0ff;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 8px;
+    margin: 10px;
+}
+
+    .btn.secondary {
+        background-color: transparent;
+        border: 2px solid #3cb0ff;
+    }
+
+    .btn:hover {
+        background-color: #1e90ff;
+    }
+
+/* === Layout / Navbar / Footer === */
+
+:root {
+    --primary: #1b6ec2;
+    --primary-600: #155a9c;
+    --bg: #0f172a;
+    --bg-2: #0b1226;
+    --panel: #ffffff;
+    --text: #0f172a;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --shadow: 0 10px 30px rgba(0,0,0,.10);
+    --radius: 14px;
+}
+
+/* Global */
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    color: var(--text);
+    background: radial-gradient(1000px 500px at 120% -20%, #22d3ee 0%, transparent 55%), radial-gradient(900px 450px at -10% 120%, #0ea5e9 0%, transparent 55%), linear-gradient(180deg, #f7f9fc 0%, #eef3f9 100%);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    line-height: 1.45;
+}
+
+/* Header (glass + gradient) */
+.app-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(8px);
+    background: linear-gradient(180deg, rgba(11,18,38,.85), rgba(15,23,42,.78));
+    box-shadow: 0 6px 24px rgba(0,0,0,.25);
+    border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.nav {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.brand {
+    color: #e8f0ff;
+    text-decoration: none;
+    font-weight: 800;
+    letter-spacing: .2px;
+    font-size: 18px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    transition: background .2s ease, opacity .2s ease;
+}
+
+    .brand:hover {
+        background: rgba(255,255,255,.06);
+    }
+
+.nav-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-link {
+    color: #dbe7ff;
+    text-decoration: none;
+    padding: 8px 10px;
+    border-radius: 10px;
+    transition: background .2s ease, color .2s ease;
+    border: 1px solid transparent;
+}
+
+    .nav-link:hover {
+        background: rgba(255,255,255,.06);
+        border-color: rgba(255,255,255,.12);
+    }
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 9px 14px;
+    border-radius: 10px;
+    background: linear-gradient(180deg, var(--primary), var(--primary-600));
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    letter-spacing: .2px;
+    box-shadow: 0 10px 20px rgba(27,110,194,.35);
+    border: 1px solid rgba(255,255,255,.15);
+    transition: transform .06s ease, filter .2s ease, box-shadow .2s ease;
+}
+
+    .btn:hover {
+        filter: brightness(1.05);
+        box-shadow: 0 12px 26px rgba(27,110,194,.45);
+    }
+
+    .btn:active {
+        transform: translateY(1px);
+    }
+
+.btn-outline {
+    background: transparent;
+    color: #e8f0ff;
+    border: 1px solid rgba(255,255,255,.35);
+    box-shadow: none;
+}
+
+    .btn-outline:hover {
+        background: rgba(255,255,255,.08);
+    }
+
+.btn-ghost {
+    background: rgba(255,255,255,.08);
+    color: #e8f0ff;
+    border: 1px solid rgba(255,255,255,.18);
+    box-shadow: none;
+}
+
+    .btn-ghost:hover {
+        background: rgba(255,255,255,.12);
+    }
+
+/* Greeting */
+.greet {
+    color: #cfe0ff;
+    font-size: 14px;
+    padding: 6px 8px;
+}
+
+/* Main container */
+.app-main {
+    padding: 26px 16px 40px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Footer */
+.app-footer {
+    border-top: 1px solid var(--border);
+    background: #fff;
+}
+
+    .app-footer .container {
+        padding: 18px 16px;
+        color: var(--muted);
+        font-size: 14px;
+    }
+
+/* Responsywnoœæ */
+@media (max-width: 720px) {
+    .nav {
+        padding: 10px 12px;
+    }
+
+    .greet {
+        display: none;
+    }
+
+    .btn, .btn-outline, .btn-ghost {
+        padding: 8px 12px;
+    }
+}
+/* === Sticky footer (shell) === */
+.app-shell {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-main {
+    flex: 1 0 auto;
+}
+
+.app-footer {
+    flex-shrink: 0;
+}
+
+/* === Dark theme override === */
+body.app-dark {
+    color: #e6eefc;
+    background: radial-gradient(1200px 600px at 85% -10%, #0ea5e933 0%, transparent 55%), radial-gradient(1000px 500px at -10% 110%, #22d3ee33 0%, transparent 60%), linear-gradient(180deg, #0a0f1d 0%, #0b1226 100%);
+}
+
+/* Header – szklany, ciemny */
+.app-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(8px);
+    background: linear-gradient(180deg, rgba(11,18,38,.92), rgba(8,14,30,.86));
+    box-shadow: 0 6px 24px rgba(0,0,0,.32);
+    border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.nav {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.brand {
+    color: #e8f0ff;
+    text-decoration: none;
+    font-weight: 800;
+    letter-spacing: .2px;
+    font-size: 18px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    transition: background .2s ease, opacity .2s ease;
+}
+
+    .brand:hover {
+        background: rgba(255,255,255,.06);
+    }
+
+.nav-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-link {
+    color: #dbe7ff;
+    text-decoration: none;
+    padding: 8px 10px;
+    border-radius: 10px;
+    transition: background .2s ease, color .2s ease;
+    border: 1px solid transparent;
+}
+
+    .nav-link:hover {
+        background: rgba(255,255,255,.06);
+        border-color: rgba(255,255,255,.12);
+    }
+
+/* Buttons (spójne z dark) */
+:root {
+    --primary: #1b6ec2;
+    --primary-600: #155a9c;
+}
+
+.btn {
+    display: inline-block;
+    padding: 9px 14px;
+    border-radius: 10px;
+    background: linear-gradient(180deg, var(--primary), var(--primary-600));
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    letter-spacing: .2px;
+    box-shadow: 0 10px 20px rgba(27,110,194,.35);
+    border: 1px solid rgba(255,255,255,.15);
+    transition: transform .06s ease, filter .2s ease, box-shadow .2s ease;
+}
+
+    .btn:hover {
+        filter: brightness(1.05);
+        box-shadow: 0 12px 26px rgba(27,110,194,.45);
+    }
+
+    .btn:active {
+        transform: translateY(1px);
+    }
+
+.btn-outline {
+    background: transparent;
+    color: #e8f0ff;
+    border: 1px solid rgba(255,255,255,.35);
+    box-shadow: none;
+}
+
+    .btn-outline:hover {
+        background: rgba(255,255,255,.08);
+    }
+
+.btn-ghost {
+    background: rgba(255,255,255,.10);
+    color: #e8f0ff;
+    border: 1px solid rgba(255,255,255,.18);
+    box-shadow: none;
+}
+
+    .btn-ghost:hover {
+        background: rgba(255,255,255,.16);
+    }
+
+.greet {
+    color: #cfe0ff;
+    font-size: 14px;
+    padding: 6px 8px;
+}
+
+/* G³ówna treœæ w ciemnym motywie */
+.app-main {
+    padding: 26px 16px 40px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Footer – ciemny i przyklejony do do³u */
+.app-footer {
+    border-top: 1px solid rgba(255,255,255,.08);
+    background: linear-gradient(180deg, #0b1226, #0a0f1d);
+    color: #b7c6e6;
+}
+
+    .app-footer .container {
+        padding: 18px 16px;
+        font-size: 14px;
+    }
+
+/* Responsywnoœæ */
+@media (max-width: 720px) {
+    .nav {
+        padding: 10px 12px;
+    }
+
+    .greet {
+        display: none;
+    }
+
+    .btn, .btn-outline, .btn-ghost {
+        padding: 8px 12px;
+    }
+}
+/* --- NAVBAR RIGHT (Panel / login / rejestracja / wyloguj) --- */
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    /* wspólny styl dla wszystkich linków po prawej */
+    .navbar-right a {
+        font-size: 14px;
+        text-decoration: none;
+        color: #e5e7eb;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        background: transparent;
+        transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.08s ease;
+    }
+
+        /* hover dla zwyk³ych linków (Panel, Zaloguj, Zmieñ has³o) */
+        .navbar-right a:hover {
+            background: rgba(148, 163, 184, 0.16);
+            border-color: rgba(148, 163, 184, 0.5);
+            transform: translateY(-1px);
+        }
+
+        /* ostatni link w bloku (Rejestruj lub Wyloguj) jako przycisk */
+        .navbar-right a:last-child {
+            background: linear-gradient(90deg, #22c55e, #16a34a);
+            color: #0f172a;
+            font-weight: 600;
+            box-shadow: 0 6px 16px rgba(22, 163, 74, 0.55);
+            border-color: transparent;
+        }
+
+            .navbar-right a:last-child:hover {
+                background: linear-gradient(90deg, #16a34a, #15803d);
+                box-shadow: 0 8px 20px rgba(22, 163, 74, 0.7);
+            }
+
+    /* tekst "Witaj, ..." */
+    .navbar-right span {
+        font-size: 13px;
+        color: #e5e7eb;
+        opacity: 0.9;
+    }

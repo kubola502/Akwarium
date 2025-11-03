@@ -1,0 +1,34 @@
+[
+  {
+    "ContainingType": "Akwarium.Controllers.SensorsDataController",
+    "Method": "PostSensorData",
+    "RelativePath": "api/SensorsData",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "sensorData",
+        "Type": "Akwarium.Models.SensorData",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Akwarium.Controllers.SensorsDataController",
+    "Method": "GetSensorData",
+    "RelativePath": "api/SensorsData/{SensorID}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "sensorID",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

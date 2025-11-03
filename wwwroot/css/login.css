@@ -1,0 +1,173 @@
+﻿:root {
+    --bg: #0f172a; /* granat */
+    --bg-grad: #0b1226; /* ciemniejszy granat */
+    --card: #0b2545cc; /* półprzezroczysty „glass” */
+    --border: #2b3a5b;
+    --text: #0f172a; /* ciemny tekst w inputach */
+    --muted: #b7c6e6;
+    --primary: #1b6ec2;
+    --primary-hover: #155a9c;
+    --danger: #ef4444;
+    --shadow: 0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.05);
+    --radius: 16px;
+    --radius-sm: 10px;
+}
+
+/* Tło strony dla sekcji logowania */
+.auth {
+    min-height: calc(100vh - 140px); /* odejmujemy header+footer */
+    display: grid;
+    place-items: center;
+    padding: 40px 16px;
+    background: radial-gradient(1200px 600px at 85% -10%, #0ea5e9 0%, transparent 50%), radial-gradient(1000px 500px at -10% 110%, #22d3ee 0%, transparent 55%), linear-gradient(180deg, var(--bg) 0%, var(--bg-grad) 100%);
+}
+
+/* Karta logowania */
+.auth-card {
+    width: 100%;
+    max-width: 440px;
+    padding: 32px 28px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(8px);
+    color: #e6eefc;
+}
+
+    /* Jaśniejszy nagłówek */
+    .auth-card h1 {
+        margin: 0 0 6px 0;
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: .2px;
+        color: #f7fbff; /* jasny */
+        text-shadow: 0 1px 2px rgba(0,0,0,.35);
+    }
+
+.subtitle {
+    margin: 0 0 20px 0;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+/* Alert błędu */
+.alert.error {
+    background: rgba(239, 68, 68, .12);
+    border: 1px solid rgba(239, 68, 68, .4);
+    color: #fecaca;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+/* Formularz + pola */
+.auth-form {
+    display: grid;
+    gap: 14px;
+    margin-top: 8px;
+}
+
+.field {
+    display: grid;
+    gap: 6px;
+}
+
+    .field label {
+        font-size: 13px;
+        color: var(--muted);
+    }
+
+    /* BIAŁE INPUTY + ciemny tekst */
+    .field input {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 10px;
+        border: 1px solid #cbd5e1; /* jasna ramka */
+        background: #ffffff; /* BIAŁE tło zawsze */
+        color: var(--text); /* ciemny tekst */
+        -webkit-text-fill-color: var(--text); /* Safari/Chromium */
+        caret-color: var(--text);
+        outline: none;
+        transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+
+        .field input::placeholder {
+            color: #6b7280;
+        }
+
+        .field input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,.25);
+            background: #ffffff; /* nadal białe */
+        }
+
+/* Przycisk */
+.btn-primary {
+    margin-top: 6px;
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(180deg, var(--primary), var(--primary-hover));
+    color: white;
+    font-weight: 700;
+    letter-spacing: .2px;
+    cursor: pointer;
+    transition: transform .06s ease, filter .2s ease, box-shadow .2s ease;
+    box-shadow: 0 8px 20px rgba(27,110,194,.35);
+}
+
+    .btn-primary:hover {
+        filter: brightness(1.05);
+        box-shadow: 0 10px 24px rgba(27,110,194,.45);
+    }
+
+    .btn-primary:active {
+        transform: translateY(1px);
+    }
+
+/* Link pomocniczy */
+.hint {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 14px;
+    color: var(--muted);
+}
+
+    .hint a {
+        color: #93c5fd;
+        text-decoration: none;
+        font-weight: 600;
+        border-bottom: 1px dashed transparent;
+    }
+
+        .hint a:hover {
+            border-bottom-color: #93c5fd;
+        }
+
+/* Autofill (żółte tło Chrome) – zawsze białe */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+    -webkit-text-fill-color: var(--text) !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Responsywność */
+@media (max-width: 420px) {
+    .auth-card {
+        padding: 26px 20px;
+    }
+
+        .auth-card h1 {
+            font-size: 24px;
+        }
+}
+
+.success-message {
+    color: #22c55e;
+    margin-bottom: 10px;
+}
